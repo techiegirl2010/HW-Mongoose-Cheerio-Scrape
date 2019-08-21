@@ -1,12 +1,13 @@
 const express =require("express");
 const db = require("../models");
 const axios = require("axios");
+const cheerio = require("cheerio");
 
 const router = express.Router();
 router.get("/", (req, res) => {
     res.render("home");
 })
-router.get("/scrape", (req, res){
+router.get("/scrape", (req, res) => {
     console.log("inside the scrape route");
     var headlines = [];
     axios.get("https://www.npr.org").then(function(response) {
@@ -19,14 +20,16 @@ router.get("/scrape", (req, res){
     var results = [];
 
     // With cheerio, find each h3-tag with the "title" class
-    $("h3.title").each(function(i, element) {
+    $(".story-text").each(function(i, element) {
+
+        var link = $(element).find("a").attr("href");
 
         // Save the text of the element in a "title" variable
-        var title = $(element).text();
+        var title = $(element).find("h3").text();
 
         // In the currently selected element, look at its child elements (i.e., its a-tags),
         // then save the values for any "href" attributes that the child elements may have
-        var link = $(element).().attr("href");
+        //var link = $(element).attr("href");
 
         // Save these results in an object that we'll push into the results array we defined earlier
         var headlinesToAdd = {
@@ -34,6 +37,7 @@ router.get("/scrape", (req, res){
             link: link,
             saved: false
         }
+        console.log(headlinesToAdd);
         headlines.push(headlinesToAdd);
     });
 
@@ -47,5 +51,7 @@ router.get("/scrape", (req, res){
         console.log(err);
     })
     });
-    res.send("complete");
+    //res.send("complete");
 })
+
+module.exports = router;

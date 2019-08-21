@@ -22,7 +22,7 @@ module.exports ={
 
   },
   get: function(query, cb){
-      Headline.find(query).exec(err, doc) => cb(doc);
+      Headline.find(query).exec((err, doc) => cb(doc));
   }
   
 };

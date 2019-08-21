@@ -30,12 +30,10 @@ mongoose.connect("mongodb://localhost/scrapeHeadlines", { useNewUrlParser: true 
 
 // Routes
 
-var routes = require('./config');
+var routes = require('./config/routes');
 app.use('/', routes);
 
 // Start the server
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");
 });
-  -080
-  /*
