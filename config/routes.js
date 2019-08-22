@@ -7,6 +7,38 @@ const router = express.Router();
 router.get("/", (req, res) => {
     res.render("home");
 })
+router
+.get("/saved", (req, res) => {
+    db.Headline.find({})
+    .where('saved').equals(true)
+    .exec(function(err,  articleSaved){
+        if(err){
+            console.log(err);
+        }
+        else{
+            var savedOnes = {
+                articles: articleSaved
+            }
+            res.render('saved', savedOnes);
+        }
+    })
+})
+router.post("/save/:id",function(req, res){
+    console.log("save inside the routes");
+    db.Headline.findByIdAndUpdate(req.params.id, {
+        $set: { saved: true}
+        },
+        { new: true },
+        function(error, doc) {
+            if (error) {
+                console.log(error);
+                res.status(500);
+            } else {
+                console.log(doc);
+                res.redirect('/scrape');
+            }
+        });
+})
 router.get("/scrape", (req, res) => {
     console.log("inside the scrape route");
     var headlines = [];
